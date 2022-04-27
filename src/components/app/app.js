@@ -83,16 +83,23 @@ class App extends Component {
   }
 
 
+
   render() {
     const {data, term} = this.state;
     //считаем кол-во сотрудников и кол-во сотрубников на повышение
     const employees = this.state.data.length;
     const increased = this.state.data.filter(item => item.increase).length;
 
-    const filterSalaryDate = this.state.data.filter(item => item.salary >= 1000)
+  
+    // const filterSalaryDate = this.state.data.filter(item => item.salary >= 1000)
+    // 
+    // 
+    // 
+
 
     // создалим const с отфильтрововым массивом для отображения на странице вместо самой data
     const visibleData = this.searchEmp(data, term);
+
 
     return (
       <div className="app">
