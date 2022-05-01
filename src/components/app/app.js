@@ -18,7 +18,9 @@ class App extends Component {
         {name: 'Carl W.', salary: 5000, increase: false, rise: false, id: 3}
       ],
       // состояние строки поиска (по умолчанию пустая)
-      term: ''
+      term: '',
+      // фильтры сотрудников
+      filter: 'rise'
     }
     this.maxId = 4;
 
@@ -82,23 +84,32 @@ class App extends Component {
     this.setState({term});
   }
 
+  //  функция фильтрации по категориям
+  filterPost = (items, filter) => {
+    switch (filter) {
+      case 'rise':
+        return items.filter(item => item.rise);        
+      case 'moreThen1000':
+        return items.filter(item => item.salary > 1000);
+      default:
+        return items;
+    }
+  }
+  
+    // создадим метод выбора фильтра позьзователем
+    onFilterSelect = (filter) => {
+      this.setState({filter});
+    }
 
-
-  render() {
-    const {data, term} = this.state;
+  render() {    
+    const {data, term, filter} = this.state;
     //считаем кол-во сотрудников и кол-во сотрубников на повышение
     const employees = this.state.data.length;
     const increased = this.state.data.filter(item => item.increase).length;
+    // отфильтруем отфильтрованный массив по поисковому запросу массивом для отображения на странице вместо самой data
+    // вторым аргументов передадим фильтр из state, который будет отображен на страние
+    const visibleData = this.filterPost(this.searchEmp(data, term), filter)
 
-  
-    // const filterSalaryDate = this.state.data.filter(item => item.salary >= 1000)
-    // 
-    // 
-    // 
-
-
-    // создалим const с отфильтрововым массивом для отображения на странице вместо самой data
-    const visibleData = this.searchEmp(data, term);
 
 
     return (
@@ -111,7 +122,12 @@ class App extends Component {
           <SearchPanel
           //спускаем call-back функцию вниз для использования внизу
           onUpdateSearch={this.onUpdateSearch}/>
-          <AppFilter/>
+          
+          <AppFilter 
+          //передадим в комонент appFilter state filter
+          filter={filter}
+          //передадим в комонент appFilter метод выбора фильтра
+          onFilterSelect={this.onFilterSelect}/>
         </div>
         
         <EmployeesList 
